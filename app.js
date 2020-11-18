@@ -11,6 +11,7 @@ const MongoStore = require("connect-mongo")(session);
 const cors = require("cors");
 
 const auth = require("./routes/auth");
+const index = require("./routes/index");
 
 // MONGOOSE CONNECTION
 mongoose
@@ -64,7 +65,8 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 // ROUTER MIDDLEWARE
-app.use("/auth", auth);
+app.use("/", auth);
+app.use("/", index);
 
 // ERROR HANDLING
 // catch 404 and forward to error handler

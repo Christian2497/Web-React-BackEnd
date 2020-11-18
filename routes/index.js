@@ -1,4 +1,5 @@
 const express = require("express");
+const mongoose = require("mongoose");
 const router = express.Router();
 const createError = require("http-errors");
 const User = require("../models/user");
@@ -15,8 +16,8 @@ router.post(
     "/profile/add-video",
     isLoggedIn(),
     async (req, res, next) => {
-      const { title, description, url, intensity, muscle } = req.body;
-  
+     const { title, description, url, intensity, muscle } = req.body;
+      
       try {
         const exerciseExist = await Exercise.findOne({ url: url });
         console.log(exerciseExist, 'existe el ejercicio');   
@@ -31,89 +32,105 @@ router.post(
           intensity,
           muscle,
         });
-        res.json(newExercise);
+        res.status(200).json(newExercise)
+        }
+      } catch(error) {
+        next(error)
       }
-        // res.redirect("all-events");
-      } catch (error) {
-        next(error);
-      }
-      // User.findOneAndUpdate(
-      //   { _id: req.session.currentUserInfo._id },
-      //   { $push: { exercise: exercise.id } },
-      //   { new: true }
-      // ).then((user) => console.log("The exercise was created!"));
     }
   );  
 
+
   //EDIT USER
 
-  // router.get("/profile/edit", isLoggedIn(), uploadCloud.single("imageUrl"), async (req, res, next) => {
-  //   await User.findOne({ _id: req.session.currentUserInfo._id })
-  //     .then((user) => {
-  //       res.render("user/edit-user", { user });
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  // });
-  
-  // const imgPath = req.file.url;
+router.get("/profile/:id", isLoggedIn(), (req, res, next) => {
+    if(!mongoose.Types.ObjectId.isValid(req.params.id)){
+        res.status(400).json({message: "Specified id is not valid"});
+        return;
+    }
+    User.findById(req.params.id)
+    .then(userFound => {
+        res.status(200).json(userFound);
+    })
+    .catch(error => {
+        res.json(error)
+    })
+})
 
-  // router.post("/user/edit", withAuth, async (req, res, next) => {
-  //   const {
-  //     fullname,
-  //     password,
-  //     repeatPassword,
-  //     user,
-  //     email,
-  //     description,
-  //   } = req.body;
-  
-  //   try {
-  //     if (password.length < 8) {
-  //       res.render("user/edit", {
-  //         errorMessage: "Your password should have at least 8 characters",
-  //       });
-  //       return;
-  //     } else if (password !== repeatPassword) {
-  //       res.render("user/edit", {
-  //         errorMessage: "Your passwords are not matching",
-  //       });
-  //       return;
-  //     } else if (fullname.length === "") {
-  //       res.render("user/edit", {
-  //         errorMessage: "Your match will need to know how to call you ;)",
-  //       });
-  //       return;
-  //     } else if (description.length < 10) {
-  //       res.render("user/edit", {
-  //         errorMessage: "Tell your future match a bit more about yourself!",
-  //       });
-  //       return;
-  //     }
-  //     const salt = await bcrypt.genSaltSync(10);
-  //     const hashPass = await bcrypt.hashSync(password, salt);
-  
-  //     await User.findByIdAndUpdate(
-  //       req.query.user_id,
-  //       {
-  //         $set: {
-  //           fullname,
-  //           password: hashPass,
-  //           repeatPassword,
-  //           email,
-  //           description,
-  //         },
-  //       },
-  //       { new: true }
-  //     );
-  
-  //     res.redirect("/myprofile");
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // });
-  
 
+router.put('/profile/:id/edit', isLoggedIn(), uploadCloud.single("photo"), (req, res, next)=>{
+  if(!mongoose.Types.ObjectId.isValid(req.params.id)){
+      res.status(400).json({message: "Specified id is not valid"});
+      return;
+  }
+  const { username , email , weight, goal, previousImg} = req.body;
+  if(!req.file || req.file === '' || req.file === undefined){
+    imgPath = previousImg
+  }else{
+    imgPath = req.file.url 
+  }
+
+  User.findByIdAndUpdate(req.params.id, req.body)
+  .then (() => {
+      res.status(200).json({message: `Your profile is updated successfully`})
+  })
+      .catch(error => {
+      res.json(error)
+  })    
+})
+
+router.get("/videos", isLoggedIn(), (req, res, next) => {
+    Exercise.find()
+    .then(allExercises => {
+      res.json(allExercises)
+    })
+    .catch(error => {
+      res.json(error)
+    })
+});
+
+router.get("/videos/:id", isLoggedIn(), (req, res, next) => {
+    if(!mongoose.Types.ObjectId.isValid(req.params.id)){
+        res.status(400).json({message: "Specified id is not valid"});
+        return;
+    }
+    Exercise.findById(req.params.id)
+    .then(exerciseFound => {
+        res.status(200).json(exerciseFound);
+    })
+    .catch(error => {
+        res.json(error)
+    })
+})
+
+router.put('/videos/:id/edit', (req, res, next)=>{
+  if(!mongoose.Types.ObjectId.isValid(req.params.id)){
+      res.status(400).json({message: "Specified id is not valid"});
+      return;
+  }
+
+  Exercise.findByIdAndUpdate(req.params.id, req.body)
+  .then (() => {
+      res.status(200).json({message: `This exercise is updated successfully`})
+  })
+      .catch(error => {
+      res.json(error)
+  })    
+})
+
+router.delete("/videos/:id", (req, res, next) => {
+  if(!mongoose.Types.ObjectId.isValid(req.params.id)){
+      res.status(400).json({message: "Specified id is not valid"});
+      return;
+  }
+
+  Exercise.findByIdAndRemove(req.params.id)
+  .then(() => {
+      res.status(200).json({message: `This exercise was removed successfully.`})
+  })
+  .catch(error => {
+      res.json(error)
+  })
+})
 
   module.exports = router;
