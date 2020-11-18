@@ -9,7 +9,7 @@ const userSchema = new Schema({
   goal: Number,
   favourite: [{type: Schema.Types.ObjectId,ref:'Exercise'}],
   completed: [],
-  imgPath: String
+  imgPath:{ type: String, default: "/images/foto-perfil.jpg"}
 }, {
   timestamps: {
     createdAt: 'created_at',
