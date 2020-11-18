@@ -110,7 +110,7 @@ Exercise model
 
 ### Wireframe
 
-![wireframe](C:\Users\chris\OneDrive\Desktop\wireframe.png)
+![wireframes](https://raw.githubusercontent.com/Christian2497/fit-project-server/master/images/wireframe.png)
 
 ### Trello
 
