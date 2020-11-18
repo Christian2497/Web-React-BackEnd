@@ -6,9 +6,7 @@
 
 ## Description
 
-(app name) was born to help people stay fit when they can't or don't want to go out of home.
-
-## 
+(app name) was born to help people stay fit when they can't or don't want to go out of home. 
 
 ## User Stories
 
@@ -110,6 +108,10 @@ Exercise model
 
 ## Links
 
+### Wireframe
+
+![wireframe](C:\Users\chris\OneDrive\Desktop\wireframe.png)
+
 ### Trello
 
 [Link to your trello board](https://trello.com/b/sAh8PwX2/proyecto-fit) or picture of your physical board
@@ -118,9 +120,9 @@ Exercise model
 
 The url to your repository and to your deployed project
 
-[Client repository Link](https://github.com/screeeen/project-client)
+[Client repository Link](https://github.com/Christian2497/fit-project-client)
 
-[Server repository Link](https://github.com/screeeen/project-server)
+[Server repository Link](https://github.com/Christian2497/fit-project-server)
 
 [Deployed App Link](http://heroku.com)
 
