@@ -48,7 +48,7 @@ router.get("/profile/:id", isLoggedIn(), (req, res, next) => {
         res.status(400).json({message: "Specified id is not valid"});
         return;
     }
-    User.findById(req.params.id)
+    User.findById(req.params.id).populate('favourite')
     .then(userFound => {
         res.status(200).json(userFound);
     })
@@ -88,6 +88,7 @@ router.get("/videos", isLoggedIn(), (req, res, next) => {
     })
 });
 
+//video details
 router.get("/videos/:id", isLoggedIn(), (req, res, next) => {
     if(!mongoose.Types.ObjectId.isValid(req.params.id)){
         res.status(400).json({message: "Specified id is not valid"});
@@ -102,6 +103,37 @@ router.get("/videos/:id", isLoggedIn(), (req, res, next) => {
     })
 })
 
+//add to favourite
+router.post("/videos/:id", isLoggedIn(), async (req, res, next) => {
+  try {
+    const exercise_id = req.params.id; console.log('ok id ejercicio',exercise_id )
+    const user = req.session.currentUser; console.log('ok id usuario',user._id)
+    const updatedUser = await User.findOneAndUpdate(
+        user._id,
+        { $addToSet: { favourite: exercise_id } },
+        { new: true }
+      ) 
+     req.session.currentUser = updatedUser;
+     res.status(200).json(updatedUser);
+  } catch (error) {console.log(error)}
+});
+
+//delete from favourite
+router.delete("/videos/:id", isLoggedIn(), async (req, res, next) => {
+  try {
+    const exercise_id = req.params.id;
+    const updatedUser = await User.findByIdAndUpdate(
+      req.session.currentUser._id,
+      { $pull: { favourite: exercise_id } },
+      { new: true }
+      ) 
+     req.session.currentUser = updatedUser;
+     res.status(200).json(updatedUser);
+  } catch (error) {console.log(error)}
+});
+
+
+//edit exercise
 router.put('/videos/:id/edit', (req, res, next)=>{
   if(!mongoose.Types.ObjectId.isValid(req.params.id)){
       res.status(400).json({message: "Specified id is not valid"});
@@ -117,6 +149,8 @@ router.put('/videos/:id/edit', (req, res, next)=>{
   })    
 })
 
+
+//delete exercise
 router.delete("/videos/:id", (req, res, next) => {
   if(!mongoose.Types.ObjectId.isValid(req.params.id)){
       res.status(400).json({message: "Specified id is not valid"});
@@ -132,15 +166,6 @@ router.delete("/videos/:id", (req, res, next) => {
   })
 });
 
-router.post("/videos/:id", isLoggedIn(), async (req, res, next) => {
-  try {
-    const { user_id, exercise_id } = req.query;
-      await User.findByIdAndUpdate(
-        user_id,
-        { $addToSet: { favourite: exercise_id } },
-        { new: true }
-      )
-  } catch (error) {console.log(error)}
-});
+
 
   module.exports = router;
