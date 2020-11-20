@@ -78,6 +78,7 @@ router.put('/profile/:id/edit', isLoggedIn(), uploadCloud.single("imgPath"), (re
   })    
 })
 
+//show all videos
 router.get("/videos", isLoggedIn(), (req, res, next) => {
     Exercise.find()
     .then(allExercises => {
@@ -104,7 +105,7 @@ router.get("/videos/:id", isLoggedIn(), (req, res, next) => {
 })
 
 //add to favourite
-router.post("/videos/:id", isLoggedIn(), async (req, res, next) => {
+router.post("/videos/favourites/:id", isLoggedIn(), async (req, res, next) => {
   try {
     const exercise_id = req.params.id; console.log('ok id ejercicio',exercise_id )
     const user = req.session.currentUser; console.log('ok id usuario',user._id)
@@ -118,8 +119,24 @@ router.post("/videos/:id", isLoggedIn(), async (req, res, next) => {
   } catch (error) {console.log(error)}
 });
 
+//get favourites list
+router.get("/videos/favourites/:id", isLoggedIn(), (req, res, next) => {
+  if(!mongoose.Types.ObjectId.isValid(req.params.id)){
+      res.status(400).json({message: "Specified id is not valid"});
+      return;
+  }
+  User.findById(req.params.id).populate('favourite')
+    .then(userFound => {
+        res.status(200).json(userFound);
+    })
+    .catch(error => {
+        res.json(error)
+    })
+})
+
+
 //delete from favourite
-router.delete("/videos/:id", isLoggedIn(), async (req, res, next) => {
+router.delete("/videos/favourites/:id", isLoggedIn(), async (req, res, next) => {
   try {
     const exercise_id = req.params.id;
     const updatedUser = await User.findByIdAndUpdate(
