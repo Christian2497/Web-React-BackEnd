@@ -55,7 +55,7 @@ router.get("/profile/:id", isLoggedIn(), (req, res, next) => {
     .catch(error => {
         res.json(error)
     })
-})
+});
 
 
 router.put('/profile/:id/edit', isLoggedIn(), uploadCloud.single("imgPath"), (req, res, next)=>{
@@ -76,7 +76,7 @@ router.put('/profile/:id/edit', isLoggedIn(), uploadCloud.single("imgPath"), (re
       .catch(error => {
       res.json(error)
   })    
-})
+});
 
 router.get("/videos", isLoggedIn(), (req, res, next) => {
     Exercise.find()

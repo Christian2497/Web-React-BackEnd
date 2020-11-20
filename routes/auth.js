@@ -24,8 +24,6 @@ router.post(
       const emailExists = await User.findOne({ email }, "email");
       if (emailExists) {
         return next(createError(400))
-      } else if (password !== repeatPassword) {
-        return next(createError(400))
       }
       else {
         const salt = bcrypt.genSaltSync(saltRounds);
