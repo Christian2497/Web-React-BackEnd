@@ -11,6 +11,7 @@ const MongoStore = require("connect-mongo")(session);
 const cors = require("cors");
 
 const auth = require("./routes/auth");
+const index = require("./routes/index");
 
 // MONGOOSE CONNECTION
 mongoose
@@ -56,6 +57,8 @@ app.use(
   })
 );
 
+
+
 // MIDDLEWARE
 app.use(logger("dev"));
 app.use(bodyParser.json());
@@ -64,7 +67,14 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 // ROUTER MIDDLEWARE
-app.use("/auth", auth);
+app.use("/", auth);
+app.use("/", index);
+
+// ROUTE FOR SERVING REACT APP (index.html)
+app.use((req, res) => {
+  // If no routes match, send them the React HTML.
+  res.sendFile(__dirname + "/public/index.html");
+});
 
 // ERROR HANDLING
 // catch 404 and forward to error handler
