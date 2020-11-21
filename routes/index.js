@@ -12,7 +12,7 @@ const {
   validationLoggin,
 } = require("../helpers/middlewares");
 
-//create video
+//create exercise
 router.post(
     "/profile/add-video",
     isLoggedIn(),
@@ -190,6 +190,19 @@ router.delete("/videos/:id", (req, res, next) => {
   })
 });
 
-
+//exercise done/completed by user
+router.post("/videos/completed/:id", isLoggedIn(), async (req, res, next) => {
+  try {
+    const exercise_id = req.params.id; console.log('ok id ejercicio',exercise_id )
+    const user = req.session.currentUser; console.log('ok id usuario',user._id)
+    const updatedUser = await User.findOneAndUpdate(
+        user._id,
+        { $addToSet: { completed: exercise_id } },
+        { new: true }
+      ) 
+     req.session.currentUser = updatedUser;
+     res.status(200).json(updatedUser);
+  } catch (error) {console.log(error)}
+});
 
   module.exports = router;
