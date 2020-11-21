@@ -12,12 +12,13 @@ const {
   validationLoggin,
 } = require("../helpers/middlewares");
 
+//create video
 router.post(
     "/profile/add-video",
     isLoggedIn(),
     async (req, res, next) => {
      const { title, description, url, intensity, muscle } = req.body;
-      
+     const user = req.session.currentUser;
       try {
         const exerciseExist = await Exercise.findOne({ url: url });
         console.log(exerciseExist, 'existe el ejercicio');   
@@ -32,7 +33,14 @@ router.post(
           intensity,
           muscle,
         });
-        res.status(200).json(newExercise)
+        res.status(200).json(newExercise);
+        const updatedUser = await User.findOneAndUpdate(
+          user._id,
+          { $addToSet: { exerciseCreated: newExercise } },
+          { new: true }
+        ) 
+       req.session.currentUser = updatedUser;
+       res.status(200).json(updatedUser);
         }
       } catch(error) {
         next(error)
@@ -127,7 +135,7 @@ router.get("/videos/favourites/:id", isLoggedIn(), (req, res, next) => {
   }
   User.findById(req.params.id).populate('favourite')
     .then(userFound => {
-        res.status(200).json(userFound);
+        res.status(200).json(userFound.favourite);
     })
     .catch(error => {
         res.json(error)
@@ -148,7 +156,6 @@ router.delete("/videos/favourites/:id", isLoggedIn(), async (req, res, next) => 
      res.status(200).json(updatedUser);
   } catch (error) {console.log(error)}
 });
-
 
 //edit exercise
 router.put('/videos/:id/edit', (req, res, next)=>{
