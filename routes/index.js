@@ -72,10 +72,7 @@ router.post(
 
 //show all videos
 router.get("/videos", isLoggedIn(), (req, res, next) => {
-  if(!mongoose.Types.ObjectId.isValid(req.params.id)){
-    res.status(400).json({message: "Specified id is not valid"});
-    return;
-}
+  
     Exercise.find()
     .then(allExercises => {
       res.json(allExercises)
@@ -87,10 +84,7 @@ router.get("/videos", isLoggedIn(), (req, res, next) => {
 
 //video details
 router.get("/videos/:id", isLoggedIn(), (req, res, next) => {
-    if(!mongoose.Types.ObjectId.isValid(req.params.id)){
-        res.status(400).json({message: "Specified id is not valid"});
-        return;
-    }
+    
     Exercise.findById(req.params.id)
     .then(exerciseFound => {
         res.status(200).json(exerciseFound);
