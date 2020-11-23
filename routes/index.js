@@ -22,13 +22,35 @@ const {
     }
     User.findById(req.params.id)
     .then(userFound => {
-      console.log(userFound, 'user found')
         res.status(200).json(userFound);
     })
     .catch(error => {
         res.json(error)
     })
 })
+
+ //EDIT USER
+ router.put('/profile/:id/edit', isLoggedIn(), uploadCloud.single("imgPath"), (req, res, next)=>{
+  if(!mongoose.Types.ObjectId.isValid(req.params.id)){
+      res.status(400).json({message: "Specified id is not valid"});
+      return;
+  }
+
+  const { username , email , weight, goal/* ,  previousImg */ } = req.body;
+  /*  if(!req.file || req.file === '' || req.file === undefined){
+    imgPath = previousImg
+  }else{
+    imgPath = req.file.url 
+  }  */
+  User.findByIdAndUpdate(req.params.id, {$set:{username, email, weight, goal/* , imgPath: req.file.url */}}, {new: true})
+  .then (() => {
+      res.status(200).json({message: `Your profile is updated successfully`})
+  })
+      .catch(error => {
+      res.json(error)
+  })    
+})
+
 //create exercise
 
 
@@ -66,48 +88,6 @@ router.post(
       }
     }
   );  
-
-
-<<<<<<< HEAD
-  //EDIT USER
-
-router.get("/profile/:id", isLoggedIn(), (req, res, next) => {
-    if(!mongoose.Types.ObjectId.isValid(req.params.id)){
-        res.status(400).json({message: "Specified id is not valid"});
-        return;
-    }
-    User.findById(req.params.id).populate('favourite')
-    .then(userFound => {
-        res.status(200).json(userFound);
-    })
-    .catch(error => {
-        res.json(error)
-    })
-});
-
-
-router.put('/profile/:id/edit', isLoggedIn(), uploadCloud.single("imgPath"), (req, res, next)=>{
-  if(!mongoose.Types.ObjectId.isValid(req.params.id)){
-      res.status(400).json({message: "Specified id is not valid"});
-      return;
-  }
-  const { username , email , weight, goal/*  previousImg */} = req.body;
-  /* if(!req.file || req.file === '' || req.file === undefined){
-    imgPath = previousImg
-  }else{
-    imgPath = req.file.url 
-  } */
-  User.findByIdAndUpdate(req.params.id, {$set:{username, email, weight, goal, imgPath: req.file.url}}, {new: true})
-  .then (() => {
-      res.status(200).json({message: `Your profile is updated successfully`})
-  })
-      .catch(error => {
-      res.json(error)
-  })    
-});
-=======
-
->>>>>>> d69174e880103cba86aa52a44dce68de7109b73c
 
 //show all videos
 router.get("/videos", isLoggedIn(), (req, res, next) => {
@@ -231,29 +211,5 @@ router.post("/videos/completed/:id", isLoggedIn(), async (req, res, next) => {
      res.status(200).json(updatedUser);
   } catch (error) {console.log(error)}
 });
-
-
-
- //EDIT USER
-router.put('/profile/:id/edit', isLoggedIn(), uploadCloud.single("imgPath"), (req, res, next)=>{
-  if(!mongoose.Types.ObjectId.isValid(req.params.id)){
-      res.status(400).json({message: "Specified id is not valid"});
-      return;
-  }
-  const { username , email , weight, goal,  previousImg } = req.body;
-   if(!req.file || req.file === '' || req.file === undefined){
-    imgPath = previousImg
-  }else{
-    imgPath = req.file.url 
-  } 
-  User.findByIdAndUpdate(req.params.id, {$set:{username, email, weight, goal, imgPath: req.file.url}}, {new: true})
-  .then (() => {
-      res.status(200).json({message: `Your profile is updated successfully`})
-  })
-      .catch(error => {
-      res.json(error)
-  })    
-})
-
 
   module.exports = router;
