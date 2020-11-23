@@ -8,6 +8,7 @@ const userSchema = new Schema({
   weight: Number,
   goal: Number,
   favourite: [{type: Schema.Types.ObjectId,ref:'Exercise'}],
+  exerciseCreated: [{type: Schema.Types.ObjectId,ref:'Exercise'}],
   completed: [],
   imgPath:{ type: String, default: "/images/foto-perfil.jpg"}
 }, {

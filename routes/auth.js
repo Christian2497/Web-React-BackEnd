@@ -52,14 +52,16 @@ router.post(
     try {
       const user = await User.findOne({ email });
       if (!user) {
-        next(createError(404));
+        res.status(404).json({errorMessage: 'email not valid'})
+        next(createError(404, 'email not valid'));
       }
       else if (bcrypt.compareSync(password, user.password)) {
         req.session.currentUser = user;
         res.status(200).json(user);
         return;
       } else {
-        next(createError(401));
+        res.status(401).json({errorMessage: 'password not valid'});
+        next(createError(401, 'password not valid'));
       }
     } catch (error) {
       next(error);
@@ -78,11 +80,6 @@ router.post("/logout", isLoggedIn(), (req, res, next) => {
 
 //'/private'
 
-router.get("/profile", isLoggedIn(), (req, res, next) => {
-  res
-    .status(200)
-    .json({ message: " User is logged in" });
-});
 
 // GET '/me'
 
