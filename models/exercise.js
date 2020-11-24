@@ -6,7 +6,8 @@ const exerciseSchema = new Schema({
   description: String,
   url: String,
   intensity: String,
-  muscle: String
+  muscle: String,
+  duration: Number,
 }, {
   timestamps: {
     createdAt: 'created_at',

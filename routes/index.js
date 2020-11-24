@@ -20,7 +20,7 @@ const {
         res.status(400).json({message: "Specified id is not valid"});
         return;
     }
-    User.findById(req.params.id)
+    User.findById(req.params.id).populate('favourite')
     .then(userFound => {
         res.status(200).json(userFound);
     })
@@ -97,7 +97,7 @@ router.get("/videos", isLoggedIn(), (req, res, next) => {
   
     Exercise.find()
     .then(allExercises => {
-      res.json(allExercises)
+      res.status(200).json(allExercises)
     })
     .catch(error => {
       res.json(error)
