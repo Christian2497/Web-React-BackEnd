@@ -37,19 +37,13 @@ const {
   }
 
   const { username , weight, goal, imgPath} = req.body;
-/*   console.log(previousImg, "previousIMg")
-  if(!req.file || req.file === '' || req.file === undefined){
-    imgPath = previousImg
-  }else{
-    imgPath = req.file.url
-  } */
   
   User.findByIdAndUpdate(req.params.id, {$set:{username, weight, goal, imgPath}}, {new: true})
   .then (() => {
       res.status(200).json({message: `Your profile is updated successfully`})
   })
       .catch(error => {
-      res.json(error)
+      res.json(error)       
   })    
 })
 
