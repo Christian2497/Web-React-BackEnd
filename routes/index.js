@@ -22,16 +22,47 @@ const {
     }
     User.findById(req.params.id)
     .then(userFound => {
-      console.log(userFound, 'user found')
         res.status(200).json(userFound);
     })
     .catch(error => {
         res.json(error)
     })
 })
+
+ //EDIT USER
+ router.put('/profile/:id/edit', isLoggedIn(), uploadCloud.single("imgPath"), (req, res, next)=>{
+  if(!mongoose.Types.ObjectId.isValid(req.params.id)){
+      res.status(400).json({message: "Specified id is not valid"});
+      return;
+  }
+
+  const { username , weight, goal, imgPath} = req.body;
+/*   console.log(previousImg, "previousIMg")
+  if(!req.file || req.file === '' || req.file === undefined){
+    imgPath = previousImg
+  }else{
+    imgPath = req.file.url
+  } */
+  
+  User.findByIdAndUpdate(req.params.id, {$set:{username, weight, goal, imgPath}}, {new: true})
+  .then (() => {
+      res.status(200).json({message: `Your profile is updated successfully`})
+  })
+      .catch(error => {
+      res.json(error)
+  })    
+})
+
+router.post("/upload", uploadCloud.single("imgPath"), (req, res, next) => {
+  if (!req.file) {
+    next(new Error("No file uploaded!"));
+    return;
+  }
+  res.json({ secure_url: req.file.secure_url });
+});
+
+
 //create exercise
-
-
 router.post(
     "/profile/:id/add-video",
     isLoggedIn(),
@@ -66,8 +97,6 @@ router.post(
       }
     }
   );  
-
-
 
 //show all videos
 router.get("/videos", isLoggedIn(), (req, res, next) => {
@@ -185,26 +214,5 @@ router.post("/videos/completed/:id", isLoggedIn(), async (req, res, next) => {
      res.status(200).json(updatedUser);
   } catch (error) {console.log(error)}
 });
-
-
-
- //EDIT USER
-router.put('/profile/:id/edit', isLoggedIn(), /*uploadCloud.single("imgPath"),*/ (req, res, next)=>{
-  
-  const { username , /*email,*/ weight, goal,  /*previousImg*/ } = req.body;
-  //  if(!req.file || req.file === '' || req.file === undefined){
-  //   imgPath = previousImg
-  // }else{
-  //   imgPath = req.file.url 
-  // } 
-  User.findByIdAndUpdate(req.params.id, {$set:{username, /*email,*/ weight, goal, /*imgPath: req.file.url*/}}, {new: true})
-  .then (() => {
-      res.status(200).json({message: `Your profile is updated successfully`})
-  })
-      .catch(error => {
-      res.json(error)
-  })    
-})
-
 
   module.exports = router;
