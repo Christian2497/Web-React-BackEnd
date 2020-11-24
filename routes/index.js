@@ -74,7 +74,7 @@ router.get("/videos", isLoggedIn(), (req, res, next) => {
   
     Exercise.find()
     .then(allExercises => {
-      res.json(allExercises)
+      res.status(200).json(allExercises)
     })
     .catch(error => {
       res.json(error)
