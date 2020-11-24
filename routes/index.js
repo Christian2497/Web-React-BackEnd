@@ -20,7 +20,7 @@ const {
         res.status(400).json({message: "Specified id is not valid"});
         return;
     }
-    User.findById(req.params.id)
+    User.findById(req.params.id).populate('favourite')
     .then(userFound => {
         res.status(200).json(userFound);
     })
