@@ -43,7 +43,7 @@ const {
       res.status(200).json({message: `Your profile is updated successfully`})
   })
       .catch(error => {
-      res.json(error)
+      res.json(error)       
   })    
 })
 
