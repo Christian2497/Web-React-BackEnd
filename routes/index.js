@@ -109,6 +109,26 @@ router.get("/profile/:id/my-exercises", isLoggedIn(), (req, res, next) => {
     })
 })
 
+router.delete("/my-exercises/:id", isLoggedIn(), async (req, res, next) => {
+  if(!mongoose.Types.ObjectId.isValid(req.params.id)){
+    res.status(400).json({message: "Specified id is not valid"});
+    return;
+  }
+  try {
+    const exercise_id = req.params.id
+    const updatedUser = await User.findByIdAndUpdate(
+      req.session.currentUser._id,
+      { $pull: { exerciseCreated: exercise_id } },
+      { new: true }
+      ) 
+     req.session.currentUser = updatedUser;
+     res.status(200).json(updatedUser);
+
+     const updatedExercise = await Exercise.findByIdAndDelete(exercise_id) 
+     res.status(200).json(updatedExercise);
+  } catch (error) {console.log(error)}
+})
+
 //show all videos
 router.get("/videos", isLoggedIn(), (req, res, next) => {
   
@@ -214,8 +234,8 @@ router.delete("/videos/:id", (req, res, next) => {
 //exercise done/completed by user
 router.post("/videos/completed/:id", isLoggedIn(), async (req, res, next) => {
   try {
-    const exercise_id = req.params.id; console.log('ok id ejercicio',exercise_id )
-    const user = req.session.currentUser; console.log('ok id usuario',user._id)
+    const exercise_id = req.params.id;
+    const user = req.session.currentUser; 
     const updatedUser = await User.findOneAndUpdate(
         user._id,
         { $addToSet: { completed: exercise_id } },
