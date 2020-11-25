@@ -20,7 +20,7 @@ const {
         res.status(400).json({message: "Specified id is not valid"});
         return;
     }
-    User.findById(req.params.id).populate('favourite')
+    User.findById(req.params.id).populate('favourite').populate("exerciseCreated")
     .then(userFound => {
         res.status(200).json(userFound);
     })
@@ -61,7 +61,7 @@ router.post(
     "/profile/:id/add-video",
     isLoggedIn(),
     async (req, res, next) => {
-     const { title, description, url, intensity, muscle } = req.body;
+     const { title, description, url, intensity, muscle, duration } = req.body;
      const user = req.session.currentUser;
       try {
         const exerciseExist = await Exercise.findOne({ url: url });
@@ -76,9 +76,10 @@ router.post(
           url,
           intensity,
           muscle,
+          duration
         });
         res.status(200).json(newExercise);
-        const updatedUser = await User.findOneAndUpdate(
+        const updatedUser = await User.findByIdAndUpdate(
           user._id,
           { $addToSet: { exerciseCreated: newExercise } },
           { new: true }
@@ -91,6 +92,22 @@ router.post(
       }
     }
   );  
+
+// get exercises created
+
+router.get("/profile/:id/my-exercises", isLoggedIn(), (req, res, next) => {
+  if(!mongoose.Types.ObjectId.isValid(req.params.id)){
+      res.status(400).json({message: "Specified id is not valid"});
+      return;
+  }
+  User.findById(req.params.id)
+    .then(userFound => {
+        res.status(200).json(userFound.exerciseCreated);
+    })
+    .catch(error => {
+        res.json(error)
+    })
+})
 
 //show all videos
 router.get("/videos", isLoggedIn(), (req, res, next) => {

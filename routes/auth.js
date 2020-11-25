@@ -78,9 +78,6 @@ router.post("/logout", isLoggedIn(), (req, res, next) => {
   return;
 });
 
-//'/private'
-
-
 // GET '/me'
 
 // chequea si el usuario está logueado usando la función helper (chequea si existe la sesión)
