@@ -158,7 +158,7 @@ router.post("/videos/favourites/:id", isLoggedIn(), async (req, res, next) => {
   try {
     const exercise_id = req.params.id; console.log('ok id ejercicio',exercise_id )
     const user = req.session.currentUser; console.log('ok id usuario',user._id)
-    const updatedUser = await User.findOneAndUpdate(
+    const updatedUser = await User.findByIdAndUpdate(
         user._id,
         { $addToSet: { favourite: exercise_id } },
         { new: true }
