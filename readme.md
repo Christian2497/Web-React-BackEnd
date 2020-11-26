@@ -5,7 +5,7 @@
 
 ## Description
 
-Fitline was born to help people stay fit when they can't or don't want to go out of home. 
+Fitline was born during the covid restrictions for sport lovers who don't want to leave their sport routine behind. In this App you will find the best home workouts, a filtered search between them and a montly calendar that will help you achieve the perfect body for this summer. Also, you will be able to save the videos you loved on your profile, as well as add videos to the community with your favourite workouts.
 
 ## User Stories
 
