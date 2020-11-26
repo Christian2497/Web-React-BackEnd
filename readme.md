@@ -2,7 +2,6 @@
 
 #  FITLINE
 
-# Quick Compo
 
 ## Description
 
@@ -10,7 +9,7 @@ Fitline was born to help people stay fit when they can't or don't want to go out
 
 ## User Stories
 
-- **404:** As an anon/user I can see a 404 page if I try to reach a page that does not exist so that I know it's my fault
+- **404:** As an anon/user I can see a 404 page if I try to reach a page that does not exist so that I know it's my fault.
 - **Signup:** As an anon I can sign up in the platform so that I can join the fit community.
 - **Login:** As a user I can login to the platform so that I can see the exercise routines.
 - **Logout:** As a user I can logout from the platform when I finish using it.
@@ -23,8 +22,7 @@ Fitline was born to help people stay fit when they can't or don't want to go out
 
 ## Backlog
 
-- Add a random exercise every month in the calendar
-- Update the calendar every month with the month you touch
+- Add a random exercise every month in the calendar.
 - Add edit video page.
 
 # Client / Frontend
@@ -94,11 +92,11 @@ User model
   username: {type: String, required: true, unique: true},
   email: {type: String, required: true, unique: true},
   password: {type: String, required: true},
-  weight: number,
-  goal: number,
+  weight: Number,
+  goal: Number,
   favorites: [{type: Schema.Types.ObjectId,ref:'Exercise'}],
   exerciseCreated: [{type: Schema.Types.ObjectId,ref:'Exercise'}],
-  completed: tbc (date maybe),
+  completed: Boolean,
   imgPath: String
 }
 ```
@@ -124,9 +122,9 @@ Exercise model
 
 | HTTP Method | URL                       | Request Body                                       | Success status | Error Status | Description                                                  |
 | ----------- | ------------------------- | -------------------------------------------------- | -------------- | ------------ | ------------------------------------------------------------ |
-| POST        | `/signup`                 | {name, email, password}                            | 201            | 404          | Checks if fields not empty (422) and user not exists (409), then create user with encrypted password, and store user in session |
-| POST        | `/login`                  | {username, password}                               | 200            | 401          | Checks if fields not empty (422), if user exists (404), and if password matches (404), then stores user in session |
-| POST        | `/logout`                 | (empty)                                            | 204            | 400          | Logs out the user                                            |
+| POST        | /signup                 | {name, email, password}                            | 201            | 404          | Checks if fields not empty (422) and user not exists (409), then create user with encrypted password, and store user in session |
+| POST        | /login                  | {username, password}                               | 200            | 401          | Checks if fields not empty (422), if user exists (404), and if password matches (404), then stores user in session |
+| POST        | /logout                 | (empty)                                            | 204            | 400          | Logs out the user                                            |
 | GET         | /                         |                                                    |                |              | Home Page                                                    |
 | GET         | /profile/:id              |                                                    |                |              | See user profile                                             |
 | PUT         | /profile/edit             | {username, email, weigth, goal, image}             | 201            | 400          | Edit Profile                                                 |
@@ -155,11 +153,9 @@ Exercise model
 
 ### Trello
 
-[Link to your trello board](https://trello.com/b/sAh8PwX2/proyecto-fit) or picture of your physical board
+[Link to trello board](https://trello.com/b/sAh8PwX2/proyecto-fit) 
 
 ### Git
-
-The url to your repository and to your deployed project
 
 [Client repository Link](https://github.com/Christian2497/fit-project-client)
 
@@ -169,7 +165,4 @@ The url to your repository and to your deployed project
 
 ### Slides
 
-The url to your presentation slides
-
 [Slides Link](https://docs.google.com/presentation/d/1WLpymaa1QK3PJTuNyf0hGJAPzENmW-8iZpt2tMTmszo/edit#slide=id.p)
-
