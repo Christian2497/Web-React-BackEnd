@@ -12,6 +12,7 @@ const {
   validationLoggin,
 } = require("../helpers/middlewares");
 
+// sign up
 
 router.post(
   "/signup",
@@ -42,7 +43,6 @@ router.post(
 
 //'/login'
 
-
 router.post(
   "/login",
   isNotLoggedIn(),
@@ -68,6 +68,7 @@ router.post(
     }
   }
 );
+
  //log out
 router.post("/logout", isLoggedIn(), (req, res, next) => {
   req.session.destroy();
@@ -80,9 +81,7 @@ router.post("/logout", isLoggedIn(), (req, res, next) => {
 
 // GET '/me'
 
-// chequea si el usuario está logueado usando la función helper (chequea si existe la sesión)
 router.get("/me", isLoggedIn(), (req, res, next) => {
-  // si está logueado, previene que el password sea enviado y devuelve un json con los datos del usuario (disponibles en req.session.currentUser)
   req.session.currentUser.password = "*";
   res.json(req.session.currentUser);
 });

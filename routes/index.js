@@ -55,7 +55,6 @@ router.post("/upload", uploadCloud.single("imgPath"), (req, res, next) => {
   res.json({ secure_url: req.file.secure_url });
 });
 
-
 //create exercise
 router.post(
     "/profile/:id/add-video",
@@ -64,8 +63,7 @@ router.post(
      const { title, description, url, intensity, muscle, duration } = req.body;
      const user = req.session.currentUser;
       try {
-        const exerciseExist = await Exercise.findOne({ url: url });
-        console.log(exerciseExist, 'existe el ejercicio');   
+        const exerciseExist = await Exercise.findOne({ url: url }); 
         if (exerciseExist !== null) {
           return next(createError(400))
         } else {
@@ -109,6 +107,8 @@ router.get("/profile/:id/my-exercises", isLoggedIn(), (req, res, next) => {
     })
 })
 
+//delete exercise
+
 router.delete("/my-exercises/:id", isLoggedIn(), async (req, res, next) => {
   if(!mongoose.Types.ObjectId.isValid(req.params.id)){
     res.status(400).json({message: "Specified id is not valid"});
@@ -129,7 +129,8 @@ router.delete("/my-exercises/:id", isLoggedIn(), async (req, res, next) => {
   } catch (error) {console.log(error)}
 })
 
-//show all videos
+//show all exercises
+
 router.get("/videos", isLoggedIn(), (req, res, next) => {
   
     Exercise.find()
@@ -142,6 +143,7 @@ router.get("/videos", isLoggedIn(), (req, res, next) => {
 });
 
 //video details
+
 router.get("/videos/:id", isLoggedIn(), (req, res, next) => {
     
     Exercise.findById(req.params.id)
@@ -154,10 +156,11 @@ router.get("/videos/:id", isLoggedIn(), (req, res, next) => {
 })
 
 //add to favourite
+
 router.post("/videos/favourites/:id", isLoggedIn(), async (req, res, next) => {
   try {
-    const exercise_id = req.params.id; console.log('ok id ejercicio',exercise_id )
-    const user = req.session.currentUser; console.log('ok id usuario',user._id)
+    const exercise_id = req.params.id;
+    const user = req.session.currentUser;
     const updatedUser = await User.findByIdAndUpdate(
         user._id,
         { $addToSet: { favourite: exercise_id } },
@@ -169,6 +172,7 @@ router.post("/videos/favourites/:id", isLoggedIn(), async (req, res, next) => {
 });
 
 //get favourites list
+
 router.get("/videos/favourites/:id", isLoggedIn(), (req, res, next) => {
   if(!mongoose.Types.ObjectId.isValid(req.params.id)){
       res.status(400).json({message: "Specified id is not valid"});
@@ -185,6 +189,7 @@ router.get("/videos/favourites/:id", isLoggedIn(), (req, res, next) => {
 
 
 //delete from favourite
+
 router.delete("/videos/favourites/:id", isLoggedIn(), async (req, res, next) => {
   try {
     const exercise_id = req.params.id;
@@ -199,6 +204,7 @@ router.delete("/videos/favourites/:id", isLoggedIn(), async (req, res, next) => 
 });
 
 //edit exercise
+
 router.put('/videos/:id/edit', (req, res, next)=>{
   if(!mongoose.Types.ObjectId.isValid(req.params.id)){
       res.status(400).json({message: "Specified id is not valid"});
@@ -216,6 +222,7 @@ router.put('/videos/:id/edit', (req, res, next)=>{
 
 
 //delete exercise
+
 router.delete("/videos/:id", (req, res, next) => {
   if(!mongoose.Types.ObjectId.isValid(req.params.id)){
       res.status(400).json({message: "Specified id is not valid"});
@@ -232,6 +239,7 @@ router.delete("/videos/:id", (req, res, next) => {
 });
 
 //exercise done/completed by user
+
 router.post("/videos/completed/:id", isLoggedIn(), async (req, res, next) => {
   try {
     const exercise_id = req.params.id;

@@ -57,8 +57,6 @@ app.use(
   })
 );
 
-
-
 // MIDDLEWARE
 app.use(logger("dev"));
 app.use(bodyParser.json());
