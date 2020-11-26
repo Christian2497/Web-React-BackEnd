@@ -165,7 +165,7 @@ The url to your repository and to your deployed project
 
 [Server repository Link](https://github.com/Christian2497/fit-project-server)
 
-[Deployed App Link](http://heroku.com)
+[Deployed App Link](https://fitline.herokuapp.com/)
 
 ### Slides
 
